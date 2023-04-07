@@ -1,0 +1,18 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    unnecessary_await_in_return: error
+    always_declare_return_types: error
+    avoid_print: warning
+
+linter:
+  rules:
+    unnecessary_await_in_return: true
+    prefer_single_quotes: true
+    prefer_final_locals: true
+    avoid_unused_constructor_parameters: true
+    always_declare_return_types: true
+    avoid_print: true
+    avoid_relative_lib_imports: true
+    no_duplicate_case_values: true
