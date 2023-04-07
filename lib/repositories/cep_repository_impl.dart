@@ -11,7 +11,6 @@ class CepRepositoryImpl implements CepRepository {
       final address = AddressModel.fromMap(response.data);
       return address;
     } on DioError catch (e) {
-      log('Erro ao buscar o CEP', error: e);
       throw Exception('Erro ao buscar o CEP');
     }
   }
