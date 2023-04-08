@@ -23,11 +23,45 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  Future<void> handleSearchCep() async {
+    setState(() {
+      isLoading = true;
+    });
+    final valid = formKey.currentState?.validate() ?? false;
+    if (valid) {
+      try {
+        final cep = cepEC.text;
+        final address = await cepRepository.getCep(cep);
+        setState(() {
+          addressModel = address;
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          addressModel = null;
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              'Erro ao buscar CEP',
+              style: TextStyle(
+                color: Colors.white,
+                backgroundColor: Colors.red,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buscar CEP'),
-        backgroundColor: Colors.deepPurple,
+        title: const Text('Buscar CEP', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.cyan,
       ),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(10),
@@ -52,7 +86,9 @@ class _HomePageState extends State<HomePage> {
                         border: const OutlineInputBorder(),
                         helperText: 'Informe o CEP desejado',
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
                       ),
                       controller: cepEC,
                       validator: (value) {
@@ -69,41 +105,9 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               ElevatedButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        final valid = formKey.currentState?.validate() ?? false;
-                        if (valid) {
-                          try {
-                            final cep = cepEC.text;
-                            final address = await cepRepository.getCep(cep);
-                            setState(() {
-                              addressModel = address;
-                              isLoading = false;
-                            });
-                          } catch (e) {
-                            setState(() {
-                              addressModel = null;
-                              isLoading = false;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(
-                                  'Erro ao buscar CEP',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      backgroundColor: Colors.red),
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      },
-                child: Text('Buscar CEP'),
+                onPressed: isLoading ? null : handleSearchCep,
+                child:
+                    const Text('Buscar', style: TextStyle(color: Colors.white)),
               ),
               Visibility(
                 visible: isLoading,
@@ -146,7 +150,10 @@ class _HomePageState extends State<HomePage> {
                       addressModel = null;
                     });
                   },
-                  child: Text('Limpar resultado'),
+                  child: const Text(
+                    'Limpar resultado',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               )
             ]),
