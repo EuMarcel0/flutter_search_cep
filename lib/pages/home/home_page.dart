@@ -34,23 +34,39 @@ class _HomePageState extends State<HomePage> {
           child: Form(
             key: formKey,
             child: Column(children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'CEP',
-                  hintText: 'Digite o CEP',
-                  border: OutlineInputBorder(),
-                  helperText: 'Informe o CEP desejado',
-                ),
-                controller: cepEC,
-                validator: (value) {
-                  if (value == null || value == '') {
-                    setState(() {
-                      isLoading = false;
-                    });
-                    return 'Digite um CEP válido';
-                  }
-                  return null;
-                },
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            cepEC.clear();
+                          },
+                          tooltip: 'Limpar campo',
+                          icon: const Icon(Icons.clear),
+                        ),
+                        labelText: 'CEP',
+                        hintText: 'Digite o CEP',
+                        border: const OutlineInputBorder(),
+                        helperText: 'Informe o CEP desejado',
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                      ),
+                      controller: cepEC,
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          return 'Digite um CEP válido';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
               ),
               ElevatedButton(
                 onPressed: isLoading
@@ -76,10 +92,12 @@ class _HomePageState extends State<HomePage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 backgroundColor: Colors.red,
-                                content: Text('Erro ao buscar CEP',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        backgroundColor: Colors.red)),
+                                content: Text(
+                                  'Erro ao buscar CEP',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      backgroundColor: Colors.red),
+                                ),
                               ),
                             );
                           }
